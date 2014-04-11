@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>  
+    <title>QUnit Test Suite</title>  
+    <link rel="stylesheet" href="qu_files/qunit-1.12.0.css" type="text/css" media="screen">
+    <script src="js/jquery-1.10.2.js"></script>
+	<script type="text/javascript" src="js/naukri_framework_v1.3.js" data-cover></script>
+    <script type="text/javascript" src="qu_files/qunit-1.12.0.js"></script>
+    <script type="text/javascript" src="qu_files/blanket.min.js"></script>
+    <script type="text/javascript">
+		$n(document).ready(function(){
+			if($n('.rdy').length>0){
+				var a=true;
+			}
+			else{a=false}
+			
+			var b = $n('.rdy').eq(0).currObj();
+			
+			var ulElm=$n('#ul1 li').length;
+			
+			var atr=$n('#ip').attr('type');
+			
+			var par=$n('.chldElm').parent().attr('class')
+			
+			var chld=$n('#parID').childrens('span');
+			
+			/*$n(document).ajaxReq({
+				type : 'post',	
+				async : 'true',	
+				datatype : 'text',
+				data : 'key1=value1&key2=value2',	
+				url : 'data/info.txt',	
+				success : function callB(resp){	
+								$n('#ajxCont').html(resp);
+							},	
+				error : function(){	
+								alert('Custom Error Message');	
+							}
+			})*/
+			
+			test('test NUI Functions', function(){
+				equal(a,true,"For:  if($n('.rdy').length>0)");
+				deepEqual(b,document.getElementById('rdyId'),"For:  $n('.rdy').eq(0).currObj() -> document.getElementById('rdyId')");
+				//deepEqual(b,document.getElementById('ul1'),"For:  $n('.rdy').eq(0).currObj() -> document.getElementById('ul1')");
+				equal(ulElm,3,"For:  $n('#ul1 li').length -> 3");
+				equal(atr,'text',"For:  $n('#ip').attr('type') -> text");
+				equal(par,'parElm',"For:  $n('.chldElm').parent().attr('class') -> parElm");
+				equal(chld.length,2,"For:  Length of $n('#parID').childrens('span') -> 2");
+			});		
+			
+			test( "Test throws", function() {
+			  throws(
+				function() {
+				  throw "some error description";
+				},
+				/description/,
+				"raised error message contains 'description'"
+			  );
+			});
+			
+			var asyncOp = function(){
+				//setTimeout(function() {
+				asyncOp.result="someExpectedValue";
+				//},1000);
+			}
+			asyncTest( "a test", function(){
+				asyncOp();
+				setTimeout(function() {
+					equal( asyncOp.result, "someExpectedValue" );
+					start();
+				}, 150);
+			});
+			
+			
+			module( "Module A",{
+				 setup: function() {
+					console.log('Module A setup fired');
+					console.time('t1');
+				  },
+				  teardown: function() {
+					  console.log('Module A teardown fired');
+					  console.timeEnd('t1');
+				  }
+			} );
+			test('Test-1 inside Module A', function(){
+				equal(a,true,"For:  if($n('.rdy').length>0)");
+			});
+			test('Test-2 inside Module A', function(){
+				deepEqual(b,document.getElementById('rdyId'),"For:  $n('.rdy').eq(0).currObj() -> document.getElementById('rdyId')");
+			});
+			
+			module( "Module B", {
+				setup: function() {
+				console.log('Module B setup fired');
+				},
+				teardown: function() {
+				  console.log('Module B teardown fired');
+				}
+			});
+			test('Test-1 inside Module B', function(){
+				equal(ulElm,3,"For:  $n('#ul1 li').length -> 3");
+			});
+			test('Test-2 inside Module B', function(){
+				equal(atr,'text',"For:  $n('#ip').attr('type') -> text");
+			});
+			
+			QUnit.begin(function(){console.log("Begin")})
+			QUnit.done(function(details){
+			  console.log( "Done:- ", "Total: ", details.total, " , Failed: ", details.failed, " , Passed: ", details.passed, " , Runtime: ", details.runtime );
+			});
+			QUnit.log(function( details ) {
+			  console.log( "Log:- ","Result: ", details.result," , Actual: ", details.actual, " , Expected: ", details.expected, " , Message: ", details.message, " , Source: ", details.source);
+			});
+			QUnit.moduleStart(function( details ) {
+			  console.log( "Started running: ", details.name );
+			});
+			QUnit.moduleDone(function( details ) {
+			  console.log( "Finished running: ", details.name, " , Failed/Passed/Total: ", details.failed,"/",details.passed,"/", details.total );
+			});
+			QUnit.testStart(function( details ) {
+			  console.log( "Test started running: ", details.name, " of module ", details.module);
+			});
+			QUnit.testDone(function( details ) {
+				console.log(details);
+			  console.log( "Test finished running: ", details.name," of module ",details.module, " , Failed/Passed/Total: ", details.failed,"/",details.passed,"/", details.total, " , Duration: " , details.duration);
+			});
+		})
+    </script>
+    <!-- Your tests file goes here -->  
+</head>  
+<body>  
+    <h1 id="qunit-header">Test Suite</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture"></div>
+    <script type="text/javascript">function blanket_toggleSource(e) {
+	var t = document.getElementById(e);
+	t.style.display === "block" ? t.style.display = "none" : t.style.display = "block";
+	}</script>
+    <div class="rdy" id="rdyId"></div>
+    <ul id="ul1">
+    	<li>1</li>
+        <li>2</li>
+        <li>3</li>
+    </ul>
+    
+    <input id="ip" type="text" />
+    
+    <div class="parElm" id="parID">
+    	<span class="chldElm"></span>
+        <span class="chldElm"></span>
+    </div>
+    
+    <div id="ajxCont"></div>    
+    
+    <script type="text/javascript">
+    function demoFunc(){
+		var rVal=false;
+		var ulElm=$n('#ul1 li').length;
+		if(ulElm==3){
+			rVal=true;
+		}
+		return rVal
+	}
+	test('test Demo Function', function(){
+		ok(demoFunc(),"Demo Function Executed Successfully!");
+	})
+    </script>
+</body>  
+</html>  
